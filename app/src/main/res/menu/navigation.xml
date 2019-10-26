@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navMovie"
+        android:icon="@drawable/ic_movie"
+        app:showAsAction="ifRoom"
+        android:title="@string/movies" />
+
+    <item
+        android:id="@+id/navTVShow"
+        android:icon="@drawable/ic_live_tv"
+        app:showAsAction="ifRoom"
+        android:title="@string/tvshow" />
+
+    <item
+        android:id="@+id/navFavorite"
+        android:icon="@drawable/ic_favorite"
+        app:showAsAction="ifRoom"
+        android:title="@string/favorite" />
+</menu>

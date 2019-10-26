@@ -1,4 +1,4 @@
-package com.luthfi.moviecatalogue.ui.main
+package com.luthfi.moviecatalogue.ui.favorite
 
 import android.content.Context
 import androidx.fragment.app.Fragment

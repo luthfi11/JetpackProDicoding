@@ -14,6 +14,10 @@ import com.luthfi.moviecatalogue.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import com.luthfi.moviecatalogue.utils.EspressoIdlingResource
+import androidx.test.espresso.IdlingRegistry
+import org.junit.After
+
 
 class MainActivityTest {
 
@@ -23,21 +27,24 @@ class MainActivityTest {
 
     @Before
     fun setUp() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getEspressoIdlingResource())
+    }
 
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getEspressoIdlingResource())
     }
 
     @Test
     fun testAppBehaviour() {
         onView(withId(R.id.tabs)).check(matches(isDisplayed()))
 
-        Thread.sleep(1000)
         onView(withId(R.id.rvMovies)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
                 9
             )
         )
 
-        Thread.sleep(1500)
         onView(withId(R.id.rvMovies)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 9,
@@ -45,20 +52,16 @@ class MainActivityTest {
             )
         )
 
-        Thread.sleep(1500)
         pressBack()
 
-        Thread.sleep(1500)
         onView(withId(R.id.viewPager)).perform(swipeLeft())
 
-        Thread.sleep(1500)
         onView(withId(R.id.rvTV)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
                 9
             )
         )
 
-        Thread.sleep(1500)
         onView(withId(R.id.rvTV)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 9,
@@ -66,9 +69,6 @@ class MainActivityTest {
             )
         )
 
-        Thread.sleep(1000)
         pressBack()
-
-        Thread.sleep(1000)
     }
 }
