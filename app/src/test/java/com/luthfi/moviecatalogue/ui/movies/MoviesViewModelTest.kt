@@ -3,8 +3,9 @@ package com.luthfi.moviecatalogue.ui.movies
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.luthfi.moviecatalogue.data.model.MovieResponse
-import com.luthfi.moviecatalogue.data.repo.MovieRepository
+import androidx.paging.PagedList
+import com.luthfi.moviecatalogue.data.model.Movie
+import com.luthfi.moviecatalogue.data.repo.remote.RemoteRepository
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,13 +23,13 @@ class MoviesViewModelTest {
     private lateinit var viewModel: MoviesViewModel
 
     @Mock
-    private lateinit var repo: MovieRepository
+    private lateinit var repo: RemoteRepository
 
     @Mock
-    private lateinit var observer: Observer<MovieResponse>
+    private lateinit var observer: Observer<PagedList<Movie>>
 
     @Mock
-    private lateinit var movieResponse: MovieResponse
+    private lateinit var movieResponse: PagedList<Movie>
 
     @Before
     fun setUp() {
@@ -38,11 +39,11 @@ class MoviesViewModelTest {
 
     @Test
     fun getListMovie() {
-        val response = MutableLiveData<MovieResponse>()
+        val response = MutableLiveData<PagedList<Movie>>()
 
-        `when`(repo.getListMovies()).thenReturn(response)
+        `when`(repo.getMovieList()).thenReturn(response)
 
-        viewModel.getLitMovie().observeForever(observer)
+        viewModel.getListMovie().observeForever(observer)
         observer.onChanged(movieResponse)
         verify(observer).onChanged(movieResponse)
     }

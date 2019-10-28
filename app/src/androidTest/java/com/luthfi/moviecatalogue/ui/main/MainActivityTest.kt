@@ -37,38 +37,49 @@ class MainActivityTest {
 
     @Test
     fun testAppBehaviour() {
-        onView(withId(R.id.tabs)).check(matches(isDisplayed()))
+        onView(withId(R.id.bottomNav)).check(matches(isDisplayed()))
 
         onView(withId(R.id.rvMovies)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
                 9
             )
         )
-
         onView(withId(R.id.rvMovies)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 9,
                 click()
             )
         )
+        onView(withId(R.id.addToFav)).perform(click())
 
         pressBack()
 
+        onView(withId(R.id.navTVShow)).perform(click())
+        onView(withId(R.id.rvTV)).perform(
+            RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
+                9
+            )
+        )
+        onView(withId(R.id.rvTV)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                9,
+                click()
+            )
+        )
+        onView(withId(R.id.addToFav)).perform(click())
+
+        pressBack()
+
+        onView(withId(R.id.navFavorite)).perform(click())
+        onView(withId(R.id.rvMovies)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+        onView(withId(R.id.addToFav)).perform(click())
+
+        pressBack()
         onView(withId(R.id.viewPager)).perform(swipeLeft())
-
-        onView(withId(R.id.rvTV)).perform(
-            RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
-                9
-            )
-        )
-
-        onView(withId(R.id.rvTV)).perform(
-            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                9,
-                click()
-            )
-        )
-
-        pressBack()
     }
 }

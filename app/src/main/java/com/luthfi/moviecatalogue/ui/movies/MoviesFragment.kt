@@ -7,20 +7,25 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.luthfi.moviecatalogue.R
 import com.luthfi.moviecatalogue.data.model.Movie
-import kotlinx.android.synthetic.main.movies_fragment.*
+import com.luthfi.moviecatalogue.adapter.MoviesPagedListAdapter
+import kotlinx.android.synthetic.main.fragment_movies.*
 import org.jetbrains.anko.support.v4.onRefresh
 
 class MoviesFragment : Fragment() {
 
     private lateinit var viewModel: MoviesViewModel
-    private lateinit var adapter: MoviesAdapter
-    private var movieList = mutableListOf<Movie>()
+    private lateinit var adapter: MoviesPagedListAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.movies_fragment, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_movies, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +39,7 @@ class MoviesFragment : Fragment() {
     }
 
     private fun setUpRecycler() {
-        adapter = MoviesAdapter(movieList)
+        adapter = MoviesPagedListAdapter()
         rvMovies.layoutManager = LinearLayoutManager(context)
         rvMovies.setHasFixedSize(true)
         rvMovies.adapter = adapter
@@ -42,13 +47,13 @@ class MoviesFragment : Fragment() {
 
     private fun getData() {
         srlMovie.isRefreshing = true
-        viewModel.getLitMovie().observe(this, Observer {
-            if (it.results.isNotEmpty()) displayData(it.results)
+        viewModel.getListMovie().observe(this, Observer {
+            displayData(it)
         })
     }
 
-    private fun displayData(movie: List<Movie>) {
+    private fun displayData(movie: PagedList<Movie>) {
         srlMovie.isRefreshing = false
-        adapter.setData(movie)
+        adapter.submitList(movie)
     }
 }

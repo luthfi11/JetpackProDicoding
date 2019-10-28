@@ -7,20 +7,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.luthfi.moviecatalogue.R
 import com.luthfi.moviecatalogue.data.model.TVShow
-import kotlinx.android.synthetic.main.tvshow_fragment.*
+import com.luthfi.moviecatalogue.adapter.TVShowPagedListAdapter
+import kotlinx.android.synthetic.main.fragment_tvshow.*
 import org.jetbrains.anko.support.v4.onRefresh
 
 class TVShowFragment : Fragment() {
 
     private lateinit var viewModel: TVShowViewModel
-    private lateinit var adapter: TVAdapter
-    private var tvList = mutableListOf<TVShow>()
+    private lateinit var adapter: TVShowPagedListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.tvshow_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_tvshow, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +35,7 @@ class TVShowFragment : Fragment() {
     }
 
     private fun setUpRecycler() {
-        adapter = TVAdapter(tvList)
+        adapter = TVShowPagedListAdapter()
         rvTV.layoutManager = LinearLayoutManager(context)
         rvTV.setHasFixedSize(true)
         rvTV.adapter = adapter
@@ -43,12 +44,12 @@ class TVShowFragment : Fragment() {
     private fun getData() {
         srlTV.isRefreshing = true
         viewModel.getTV().observe(this, Observer {
-            if (it.results.isNotEmpty()) displayData(it.results)
+            displayData(it)
         })
     }
 
-    private fun displayData(data: List<TVShow>) {
-        adapter.setData(data)
+    private fun displayData(data: PagedList<TVShow>) {
+        adapter.submitList(data)
         srlTV.isRefreshing = false
     }
 }

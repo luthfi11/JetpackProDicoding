@@ -4,23 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.luthfi.moviecatalogue.data.model.TVResponse
-import com.luthfi.moviecatalogue.data.repo.TVRepository
+import androidx.paging.PagedList
+import com.luthfi.moviecatalogue.data.model.TVShow
+import com.luthfi.moviecatalogue.data.repo.remote.RemoteRepository
 
 class TVShowViewModel : ViewModel() {
 
     private val isRefresh = MutableLiveData<Boolean>()
-    private val repo = TVRepository()
+    private val repo = RemoteRepository()
 
-    private val tvShow: LiveData<TVResponse> = Transformations.switchMap(isRefresh) {
-        repo.getListTV()
+    private val tvShow: LiveData<PagedList<TVShow>> = Transformations.switchMap(isRefresh) {
+        repo.getTVShowList()
     }
 
     init {
         refreshTV()
     }
 
-    fun getTV(): LiveData<TVResponse> = tvShow
+    fun getTV() = tvShow
 
 
     fun refreshTV() {

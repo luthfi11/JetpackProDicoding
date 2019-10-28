@@ -1,6 +1,6 @@
-package com.luthfi.moviecatalogue.data.repo
+package com.luthfi.moviecatalogue.data.repo.remote
 
-import androidx.lifecycle.MutableLiveData
+import androidx.paging.PageKeyedDataSource
 import com.luthfi.moviecatalogue.BuildConfig
 import com.luthfi.moviecatalogue.data.api.APIClient
 import com.luthfi.moviecatalogue.data.api.APIService
@@ -11,30 +11,34 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class TVRepository {
+class TVShowDataSource : PageKeyedDataSource<Int, TVShow>() {
 
     private val apiService = APIClient.getClient().create(APIService::class.java)
-    private val data = MutableLiveData<TVResponse>()
-    private val detail = MutableLiveData<TVShow>()
 
-    fun getListTV(): MutableLiveData<TVResponse> {
+    override fun loadInitial(
+        params: LoadInitialParams<Int>,
+        callback: LoadInitialCallback<Int, TVShow>
+    ) {
         EspressoIdlingResource.increment()
         apiService.getListTV(BuildConfig.API_KEY).enqueue(object : Callback<TVResponse> {
             override fun onResponse(call: Call<TVResponse>, response: Response<TVResponse>) {
                 EspressoIdlingResource.decrement()
-                data.postValue(response.body())
+                if (response.isSuccessful)
+                    callback.onResult(response.body()!!.results, null, 2)
             }
 
             override fun onFailure(call: Call<TVResponse>, t: Throwable) {
                 t.printStackTrace()
             }
         })
-
-        return data
     }
 
-    fun getTVDetail(tvShow: TVShow): MutableLiveData<TVShow> {
-        detail.postValue(tvShow)
-        return detail
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, TVShow>) {
+
     }
+
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, TVShow>) {
+
+    }
+
 }
